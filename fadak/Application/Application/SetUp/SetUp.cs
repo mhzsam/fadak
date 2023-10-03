@@ -1,10 +1,10 @@
 ﻿using Application.DTO.ResponseModel;
 using Application.Helper;
 using Application.Interface;
+using Application.Service.MoviesService;
 using Application.Service.ResponseService;
 using Application.Service.UserService;
 using Application.SetUp.Model;
-using Domain.Context;
 using Domain.Entites;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
@@ -27,23 +27,24 @@ namespace Application.SetUp
             services.AddMemoryCache();
             services.AddScoped<IResponseService, ResponseService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IMoviesService, MoviesService>();
             //services.AddSingleton(typeof(Mapper<>));
-          
+
         }
         public static void AddDataAnnotationReturnData(this IServiceCollection services)
         {
             services.Configure<ApiBehaviorOptions>(
                options => options.InvalidModelStateResponseFactory = actionContext =>
                {
-                    var errorRecordList = actionContext.ModelState
-                   .Where(modelError => modelError.Value.Errors.Count > 0)
-                   .Select(modelError => new 
-                     {
-                         ErrorField = modelError.Key,
-                         ErrorDescription =modelError.Value.Errors.FirstOrDefault().ErrorMessage
-                     }).ToList();
+                   var errorRecordList = actionContext.ModelState
+                  .Where(modelError => modelError.Value.Errors.Count > 0)
+                  .Select(modelError => new
+                  {
+                      ErrorField = modelError.Key,
+                      ErrorDescription = modelError.Value.Errors.FirstOrDefault().ErrorMessage
+                  }).ToList();
 
-                   var model = new RessponseModel(false, null,null ,errorRecordList, HttpStatusCode.BadRequest);
+                   var model = new RessponseModel(false, null, null, errorRecordList, HttpStatusCode.BadRequest);
 
 
                    return new BadRequestObjectResult(model);
@@ -52,19 +53,12 @@ namespace Application.SetUp
 
         }
 
-        public static void AddApplicationDBContext(this IServiceCollection services ,string connectionString)
-        {
-            services.AddDbContext<ApplicationDBContext> (options =>
-            {
-                options.UseSqlServer(connectionString);
-            });
-        
-        }
+       
         public static void AddJWTConfig(this IServiceCollection services, IConfiguration configuration)
         {
             services.Configure<JwtConfig>(configuration.GetSection("JWTConfig"));
 
-        }       
+        }
         public static IServiceCollection AddJWT(this IServiceCollection services)
         {
             var sp = services.BuildServiceProvider();
@@ -94,7 +88,7 @@ namespace Application.SetUp
 
             return services;
         }
-       
+
 
     }
 }

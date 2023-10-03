@@ -75,8 +75,8 @@ namespace Application.MiddleWare
                     var role = await _dbContext.UserRols.AsNoTracking().Where(s => s.UserId.ToString() == userId).Select(s => s.RoleId).ToListAsync();
                     var rolePermission = await _dbContext.RolePermissions.AsNoTracking().Where(s => role.Contains(s.RoleId)).Select(s => s.PermissionId).ToListAsync();
                     userPermission = await _dbContext.Permissions.AsNoTracking().Where(s => rolePermission.Contains(s.Id)).Select(s => s.ProjectName + "&" + s.ControllerName + "&" + s.ActionName + "&" + s.ActionMethod).ToListAsync();
-                  
-                  
+
+
                 }
 
                 for (var i = 0; i < userPermission.Count; i++)

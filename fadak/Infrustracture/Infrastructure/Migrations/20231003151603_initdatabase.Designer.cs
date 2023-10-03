@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Domain.Migrations
+namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20230626163931_addUserRole")]
-    partial class addUserRole
+    [Migration("20231003151603_initdatabase")]
+    partial class initdatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,6 +23,110 @@ namespace Domain.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("Domain.Entites.Movies.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("InsertBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("InsertDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Priorty")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UpdateBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
+            modelBuilder.Entity("Domain.Entites.Movies.Movie", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("CategoryCode")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Code")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Descriptions")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("InsertBy")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
+                    b.Property<DateTime>("InsertDate")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2023, 10, 3, 18, 46, 3, 464, DateTimeKind.Local).AddTicks(7143));
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UpdateBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoryCode");
+
+                    b.ToTable("Movies");
+                });
 
             modelBuilder.Entity("Domain.Entites.Permission", b =>
                 {
@@ -106,7 +210,7 @@ namespace Domain.Migrations
                     b.Property<DateTime>("InsertDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 26, 20, 9, 30, 819, DateTimeKind.Local).AddTicks(1232));
+                        .HasDefaultValue(new DateTime(2023, 10, 3, 18, 46, 3, 464, DateTimeKind.Local).AddTicks(9767));
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -169,7 +273,7 @@ namespace Domain.Migrations
                     b.Property<DateTime>("InsertDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 26, 20, 9, 30, 818, DateTimeKind.Local).AddTicks(7436));
+                        .HasDefaultValue(new DateTime(2023, 10, 3, 18, 46, 3, 464, DateTimeKind.Local).AddTicks(6860));
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -215,10 +319,10 @@ namespace Domain.Migrations
                         {
                             Id = 1,
                             EmailAddress = "mhzsam@gmail.com",
-                            FirstName = "Mohammad",
+                            FirstName = "Mohammad555",
                             ForceChanePassword = false,
                             InsertBy = 0,
-                            InsertDate = new DateTime(2023, 6, 26, 20, 9, 31, 584, DateTimeKind.Local).AddTicks(3147),
+                            InsertDate = new DateTime(2023, 10, 3, 18, 46, 3, 653, DateTimeKind.Local).AddTicks(8053),
                             IsDeleted = false,
                             LastName = "Zarrabi",
                             MobileNumber = "09120198177",
@@ -245,7 +349,7 @@ namespace Domain.Migrations
                     b.Property<DateTime>("InsertDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 6, 26, 20, 9, 30, 819, DateTimeKind.Local).AddTicks(77));
+                        .HasDefaultValue(new DateTime(2023, 10, 3, 18, 46, 3, 464, DateTimeKind.Local).AddTicks(9505));
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -277,11 +381,21 @@ namespace Domain.Migrations
                         {
                             Id = 1,
                             InsertBy = 0,
-                            InsertDate = new DateTime(2023, 6, 26, 20, 9, 31, 584, DateTimeKind.Local).AddTicks(6629),
+                            InsertDate = new DateTime(2023, 10, 3, 18, 46, 3, 653, DateTimeKind.Local).AddTicks(8639),
                             IsDeleted = false,
                             RoleId = 1,
                             UserId = 1
                         });
+                });
+
+            modelBuilder.Entity("Domain.Entites.Movies.Movie", b =>
+                {
+                    b.HasOne("Domain.Entites.Movies.Category", null)
+                        .WithMany()
+                        .HasForeignKey("CategoryCode")
+                        .HasPrincipalKey("Code")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entites.RolePermission", b =>

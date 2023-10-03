@@ -11,7 +11,7 @@ namespace Domain.Entites.Base
     public class BaseConfiguration<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : BaseEntity 
     {     
 
-        public void Configure(EntityTypeBuilder<TEntity> builder)
+        public virtual void Configure(EntityTypeBuilder<TEntity> builder)
         {
             builder.HasKey(s => s.Id);
             builder.Property(p => p.Id).ValueGeneratedOnAdd().IsRequired();

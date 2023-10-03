@@ -27,7 +27,7 @@ namespace Domain.Entites.Base
             set { }
         }
 
-        [DefaultValue(0)]
+        
         public int InsertBy { get; set; }
 
         public DateTime? UpdateDate { get; set; }

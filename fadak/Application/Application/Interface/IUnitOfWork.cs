@@ -1,14 +1,20 @@
 ﻿using Domain.Entites.Base;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Interface
 {
-    public interface IUnitOfWork<T> :IGenericRepository<T> where T : EntityClass
+    public interface IUnitOfWork : IDisposable
     {
-        public Task<bool> SaveChanges();
+        IRepository<ET> GetRepository<ET>() where ET : EntityClass;
+   
+
+        Task BeginTransactionAsync();
+
+        void CommitTransaction();
+
+        void RollbackTransaction();
+
+        Task<int> SaveChangesAsync();
+
+        void Dispose(bool disposing);
     }
 }

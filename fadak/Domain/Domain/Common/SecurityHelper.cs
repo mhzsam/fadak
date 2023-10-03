@@ -26,7 +26,7 @@ namespace Domain.Common
 
             return Sb.ToString();
         }
-        public static string GetNewToken(int userId, string tokenKey,int tokenTimeOut)
+        public static string GetNewToken(int userId, string tokenKey, int tokenTimeOut)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.UTF8.GetBytes(tokenKey);

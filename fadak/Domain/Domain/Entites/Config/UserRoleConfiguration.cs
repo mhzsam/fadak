@@ -14,10 +14,7 @@ namespace Domain.Entites.Config
         {
             base.Configure(builder);
             builder.Property(p => p.RoleId).IsRequired();
-            builder.Property(p => p.UserId).IsRequired();
-           
-           
-
+            builder.Property(p => p.UserId).IsRequired();     
         }
     }
 }

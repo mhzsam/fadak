@@ -11,29 +11,44 @@ namespace Application.Service.UserService
 {
     public class UserService : IUserService
     {
-        private readonly IUnitOfWork<User> _unitOfWork;
+
+        private readonly IUnitOfWork _unitOfWork;
+
         private readonly JwtConfig _jwtConfig;
 
-        public UserService(IUnitOfWork<User> unitOfWork,IOptions<JwtConfig> op)
+        public UserService(IUnitOfWork unitOfWork, IOptions<JwtConfig> op)
         {
             _unitOfWork = unitOfWork;
-            _jwtConfig= op.Value;   
+            _jwtConfig = op.Value;
         }
-             
+
 
         public async Task<IEnumerable<User>> GetAll(int PageNumber, int pageSize)
         {
-            return await _unitOfWork.GetAllAsync(PageNumber,pageSize);
+            try
+            {
+                await _unitOfWork.BeginTransactionAsync();
+                var res = await _unitOfWork.GetRepository<User>().GetAllAsync(PageNumber, pageSize);
+                _unitOfWork.CommitTransaction();
+
+                return res;
+
+            }
+            catch (Exception ex)
+            {
+                _unitOfWork.RollbackTransaction();
+                throw;
+            }
         }
 
         public async Task<User> GetById(int id)
         {
-            return await _unitOfWork.GetAsync(id);
+            return await _unitOfWork.GetRepository<User>().GetAsync(id);
         }
 
         public async Task<(bool result, string token)> Login(string Email, string PassWord)
         {
-            var user =await  _unitOfWork.FindByAsync(t => t.EmailAddress == Email.Trim());
+            var user = await _unitOfWork.GetRepository<User>().FindByAsync(t => t.EmailAddress == Email.Trim());
             if (user == null)
             {
                 return (false, "");
@@ -54,8 +69,8 @@ namespace Application.Service.UserService
 
             //var res = addUserModel.Adapt<User>();
             var user = Mapper<User>.ToEntity(addUserModel);
-            _unitOfWork.Insert(user);
-            _unitOfWork.SaveChanges();
+            _unitOfWork.GetRepository<User>().Insert(user);
+            _unitOfWork.SaveChangesAsync();
             return Task.FromResult(user);
 
         }

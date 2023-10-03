@@ -1,6 +1,5 @@
 ﻿#for run sqlserver
- docker run -e 'ACCEPT_EULA=Y' -e 'MSSQL_SA_PASSWORD=YourStrong!Passw0rd' -p 1433:1433 
-           -v sqlvolume:/var/opt/mssql -d --name MSSQLSERVER mcr.microsoft.com/mssql/server:2019-latest
+ docker run -e 'ACCEPT_EULA=Y' -e 'MSSQL_SA_PASSWORD=YourStrong!Passw0rd' -p 1433:1433  -v sqlvolume:/var/opt/mssql -d --name MSSQLSERVER mcr.microsoft.com/mssql/server:2019-latest
 
 #see all docker run 
 docker ps
@@ -22,6 +21,8 @@ docker build -f  Presentation\Presentation\Dockerfile -t  zapp .
 
  اگر انوارمنت دولپ درست کردیم فقط لینک از دستور بالا لازم هست 
 
+ #برای راه اندازی 
+ docker compose up
 
 //Add-Migration InitialCreate -Context CommerceContext -OutputDir Migrations\CommerceMigrations
 
