@@ -17,6 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static Application.Service.MoviesService.MoviesEnums;
+using Category = Domain.Entites.Movies.Category;
 
 namespace Application.Service.MoviesService
 {
@@ -35,6 +36,7 @@ namespace Application.Service.MoviesService
 
         public async Task<RessponseModel> AddOrUpdateByExcelFile(IFormFile file, MoviesEnums.ExcelFileType type)
         {
+            Stopwatch time = Stopwatch.StartNew();
 
             SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(file.OpenReadStream(), false);
 
@@ -71,8 +73,8 @@ namespace Application.Service.MoviesService
                 addOrUpdateResult = await AddorUpdateCategoryAsync(result);
             }
 
-
-            return addOrUpdateResult ? responseGenerator.Succssed() : responseGenerator.Fail(System.Net.HttpStatusCode.Conflict, "اشکال در بروز رسانی");
+            time.Stop();
+            return addOrUpdateResult ? responseGenerator.SuccssedWithResult($"time={time.ElapsedMilliseconds}") : responseGenerator.Fail(System.Net.HttpStatusCode.Conflict, "اشکال در بروز رسانی");
 
         }
 
@@ -232,7 +234,7 @@ namespace Application.Service.MoviesService
                             if (update.Code == categories[i].Code)
                             {
                                 break;
-                            }                           
+                            }
                         }
                         if (!isFind)
                         {
@@ -276,16 +278,16 @@ namespace Application.Service.MoviesService
                 }
                 if (AddLst is not null && AddLst.ToList().Count() > 0)
                 {
-                    await categoryRepositopry.BulkInsert(AddLst.ToList());
+                    await categoryRepositopry.BulkInsertAsync(AddLst.ToList());
 
                 }
                 if (updateLst is not null && updateLst.ToList().Count() > 0)
                 {
-                    categoryRepositopry.BulkUpdate(updateLst.ToList());
+                    await categoryRepositopry.BulkUpdateAsync(updateLst.ToList());
 
                 }
 
-                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.BulkSaveChangesAsync();
                 _unitOfWork.CommitTransaction();
                 return true;
             }
@@ -331,7 +333,7 @@ namespace Application.Service.MoviesService
                                 //در اینجا می تونیم بررسی کنیم اگر بیش از یک رکورد باشه الباقی را حذف کنه
                                 if (available.Code == movies[i].Code)
                                 {
-                                    movies[i].Id= available.Id;
+                                    movies[i].Id = available.Id;
                                     updateLst.Add(movies[i]);
                                     break;
                                 }
@@ -352,7 +354,7 @@ namespace Application.Service.MoviesService
                                 isFind = true;
                                 break;
                             }
-                            
+
                         }
                         if (!isFind)
                         {
@@ -395,18 +397,18 @@ namespace Application.Service.MoviesService
                 }
                 if (AddLst is not null && AddLst.ToList().Count() > 0)
                 {
-                    await movieRepositopry.BulkInsert(AddLst.ToList());
+                    await movieRepositopry.BulkInsertAsync(AddLst.ToList());
 
 
                 }
                 if (updateLst is not null && updateLst.ToList().Count() > 0)
                 {
 
-                    movieRepositopry.BulkUpdate(updateLst.ToList());
+                    await movieRepositopry.BulkUpdateAsync(updateLst.ToList());
 
                 }
 
-                await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.BulkSaveChangesAsync();
                 _unitOfWork.CommitTransaction();
                 return true;
             }
@@ -416,6 +418,22 @@ namespace Application.Service.MoviesService
                 return false;
             }
 
+        }
+
+        public async Task<RessponseModel> GetTopCategoryWithMOvies()
+        {
+            try
+            {
+                var repo = _unitOfWork.GetMovieRepository();
+                var res = await repo.GetTopCategoryWithMOvies();
+
+                return responseGenerator.SuccssedWithResult(res);
+
+            }
+            catch (Exception ex)
+            {
+                return responseGenerator.Fail(System.Net.HttpStatusCode.BadRequest, "خطا");
+            }
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Application.Interface;
+using DocumentFormat.OpenXml.InkML;
 using DocumentFormat.OpenXml.Office2010.ExcelAc;
 using Domain.Context;
 using Domain.Entites.Base;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -61,14 +63,15 @@ namespace Infrastructure.Repository.Generic
             return _entities.Where(predicate).FirstOrDefaultAsync();
         }
 
-        public async Task BulkInsert(List<T> lst)
+        public  Task BulkInsertAsync(List<T> lst)
         {
-            await _entities.AddRangeAsync(lst);
+           return  _context.BulkInsertAsync<T>(lst);
+            
         }
 
-        public void BulkUpdate(List<T> lst)
+        public Task BulkUpdateAsync(List<T> lst)
         {
-            _entities.UpdateRange(lst);
+            return _context.BulkUpdateAsync<T>(lst);
         }
 
         public async Task<int> TotalRecords()

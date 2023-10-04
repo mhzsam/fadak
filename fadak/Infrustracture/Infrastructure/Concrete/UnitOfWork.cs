@@ -1,7 +1,9 @@
 ﻿using Application.Interface;
 using Domain.Context;
 using Domain.Entites.Base;
+using EFCore.BulkExtensions;
 using Infrastructure.Repository.Generic;
+using Infrastructure.Repository.Movie;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Infrastructure.Concrete
@@ -29,11 +31,25 @@ namespace Infrastructure.Concrete
             _repositories[typeof(ET)] = repository;
             return repository;
         }
-        
+        public IMovieRepository GetMovieRepository()
+        {
+            if (_repositories.ContainsKey(typeof(IMovieRepository)))
+            {
+                return (IMovieRepository)_repositories[typeof(IMovieRepository)];
+            }
+            var repository = new MovieRepository(_context);
+            _repositories.Add(typeof(IMovieRepository), repository);
+            return repository;
+        }
+
 
         public Task<int> SaveChangesAsync()
         {
             return _context.SaveChangesAsync();
+        }
+        public Task BulkSaveChangesAsync()
+        {
+            return _context.BulkSaveChangesAsync();
         }
 
         public async Task BeginTransactionAsync()
@@ -72,5 +88,7 @@ namespace Infrastructure.Concrete
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        
     }
 }

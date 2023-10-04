@@ -11,8 +11,8 @@ namespace Application.Interface
         void Insert(T entity);
         void Update(T entity);
         void Delete(T entity);
-        Task BulkInsert(List<T> lst);
-        void BulkUpdate(List<T> lst);
+        Task BulkInsertAsync(List<T> lst);
+        Task BulkUpdateAsync(List<T> lst);
         Task<T?> FindByAsync(Expression<Func<T, bool>> predicate);
     }
 }

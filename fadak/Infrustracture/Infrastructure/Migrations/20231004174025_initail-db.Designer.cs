@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20231003151603_initdatabase")]
-    partial class initdatabase
+    [Migration("20231004174025_initail-db")]
+    partial class initaildb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -94,19 +94,13 @@ namespace Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("InsertBy")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasDefaultValue(0);
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("InsertDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 3, 18, 46, 3, 464, DateTimeKind.Local).AddTicks(7143));
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -122,8 +116,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CategoryCode");
 
                     b.ToTable("Movies");
                 });
@@ -210,7 +202,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("InsertDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 3, 18, 46, 3, 464, DateTimeKind.Local).AddTicks(9767));
+                        .HasDefaultValue(new DateTime(2023, 10, 4, 21, 10, 25, 83, DateTimeKind.Local).AddTicks(1349));
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -273,7 +265,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("InsertDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 3, 18, 46, 3, 464, DateTimeKind.Local).AddTicks(6860));
+                        .HasDefaultValue(new DateTime(2023, 10, 4, 21, 10, 25, 83, DateTimeKind.Local).AddTicks(225));
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -322,7 +314,7 @@ namespace Infrastructure.Migrations
                             FirstName = "Mohammad555",
                             ForceChanePassword = false,
                             InsertBy = 0,
-                            InsertDate = new DateTime(2023, 10, 3, 18, 46, 3, 653, DateTimeKind.Local).AddTicks(8053),
+                            InsertDate = new DateTime(2023, 10, 4, 21, 10, 25, 276, DateTimeKind.Local).AddTicks(1367),
                             IsDeleted = false,
                             LastName = "Zarrabi",
                             MobileNumber = "09120198177",
@@ -349,7 +341,7 @@ namespace Infrastructure.Migrations
                     b.Property<DateTime>("InsertDate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2023, 10, 3, 18, 46, 3, 464, DateTimeKind.Local).AddTicks(9505));
+                        .HasDefaultValue(new DateTime(2023, 10, 4, 21, 10, 25, 83, DateTimeKind.Local).AddTicks(1053));
 
                     b.Property<bool>("IsDeleted")
                         .ValueGeneratedOnAdd()
@@ -381,21 +373,11 @@ namespace Infrastructure.Migrations
                         {
                             Id = 1,
                             InsertBy = 0,
-                            InsertDate = new DateTime(2023, 10, 3, 18, 46, 3, 653, DateTimeKind.Local).AddTicks(8639),
+                            InsertDate = new DateTime(2023, 10, 4, 21, 10, 25, 276, DateTimeKind.Local).AddTicks(2003),
                             IsDeleted = false,
                             RoleId = 1,
                             UserId = 1
                         });
-                });
-
-            modelBuilder.Entity("Domain.Entites.Movies.Movie", b =>
-                {
-                    b.HasOne("Domain.Entites.Movies.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoryCode")
-                        .HasPrincipalKey("Code")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Entites.RolePermission", b =>

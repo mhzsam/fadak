@@ -16,6 +16,7 @@ namespace Presentation.SetUp
 
             services.AddSwaggerGen(c =>
             {
+                c.EnableAnnotations();
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "ZApplication",
@@ -49,51 +50,54 @@ namespace Presentation.SetUp
                     new string[] { }
                 }
                 });
-                               
+
             });
 
             return services;
         }
-        public static void AuthorizationControllerSeedData(ApplicationDBContext context, Assembly assembly )
+        public static void AuthorizationControllerSeedData(ApplicationDBContext context, Assembly assembly)
         {
-           
+
             var projectName = assembly.FullName.Split(",")[0];
-            
+
 
             var controlleractionlist = assembly.GetTypes()
             .Where(type => typeof(BaseController).IsAssignableFrom(type))
             .SelectMany(type => type.GetMethods(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
-            .Select(x => new {
+            .Select(x => new
+            {
                 Controller = x.DeclaringType.Name,
                 Action = x.Name,
-                ActionMethod =x.GetCustomAttributes().Where(attr =>
+                ActionMethod = x.GetCustomAttributes().Where(attr =>
             attr.GetType() == typeof(HttpGetAttribute)
             || attr.GetType() == typeof(HttpPutAttribute)
             || attr.GetType() == typeof(HttpPostAttribute)
             || attr.GetType() == typeof(HttpDeleteAttribute)
-            ).FirstOrDefault().ToString().Split(".").LastOrDefault().Replace("Http","").Replace("Attribute","")
-        })
+            ).FirstOrDefault().ToString().Split(".").LastOrDefault().Replace("Http", "").Replace("Attribute", "")
+            })
             .OrderBy(x => x.Controller).ThenBy(x => x.Action).ToList();
-                     
+
             List<Permission> pr = new List<Permission>();
             pr = context.Permissions.AsNoTracking().ToList();
             controlleractionlist.ForEach(p =>
             {
-               
-                if (!pr.Any(s =>s.ProjectName== projectName &&
-                                s.ControllerName == p.Controller && 
-                                s.ActionName==p.Action && 
-                                s.ActionMethod==p.ActionMethod
+
+                if (!pr.Any(s => s.ProjectName == projectName &&
+                                s.ControllerName == p.Controller &&
+                                s.ActionName == p.Action &&
+                                s.ActionMethod == p.ActionMethod
                              ))
                 {
-                    context.Permissions.Add(new Permission { ProjectName= projectName,
-                                                                    ControllerName= p.Controller,
-                                                                    ActionName=p.Action,
-                                                                    ActionMethod=p.ActionMethod
-                                                                   });
+                    context.Permissions.Add(new Permission
+                    {
+                        ProjectName = projectName,
+                        ControllerName = p.Controller,
+                        ActionName = p.Action,
+                        ActionMethod = p.ActionMethod
+                    });
                 }
             });
-        
+
             pr.ForEach(p =>
             {
                 if (!controlleractionlist.Any(s => p.ProjectName == projectName &&
@@ -116,7 +120,7 @@ namespace Presentation.SetUp
 
                 }
             });
-            
+
             context.SaveChanges();
         }
     }

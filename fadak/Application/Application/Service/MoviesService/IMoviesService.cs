@@ -12,5 +12,8 @@ namespace Application.Service.MoviesService
     public interface IMoviesService
     {
         Task<RessponseModel> AddOrUpdateByExcelFile(IFormFile file, ExcelFileType type);
+        Task<RessponseModel> GetTopCategoryWithMOvies();
+
     }
+
 }

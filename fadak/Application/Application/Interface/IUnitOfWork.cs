@@ -5,7 +5,8 @@ namespace Application.Interface
     public interface IUnitOfWork : IDisposable
     {
         IRepository<ET> GetRepository<ET>() where ET : EntityClass;
-   
+
+        IMovieRepository GetMovieRepository(); 
 
         Task BeginTransactionAsync();
 
@@ -14,6 +15,8 @@ namespace Application.Interface
         void RollbackTransaction();
 
         Task<int> SaveChangesAsync();
+
+        Task BulkSaveChangesAsync();
 
         void Dispose(bool disposing);
     }
