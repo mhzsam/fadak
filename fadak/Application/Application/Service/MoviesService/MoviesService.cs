@@ -24,11 +24,11 @@ namespace Application.Service.MoviesService
     public class MoviesService : IMoviesService
     {
         private readonly IResponseService responseGenerator;
-        private readonly IUnitOfWork _unitOfWork;
+
+        private readonly Func<string, IUnitOfWork> _unitOfWork;
 
 
-
-        public MoviesService(IResponseService responseGenerator, IUnitOfWork unitOfWork)
+        public MoviesService(IResponseService responseGenerator, Func<string, IUnitOfWork> unitOfWork)
         {
             this.responseGenerator = responseGenerator;
             _unitOfWork = unitOfWork;
@@ -186,9 +186,9 @@ namespace Application.Service.MoviesService
 
                 int batchFindSize = 200;
 
-                await _unitOfWork.BeginTransactionAsync();
+                await _unitOfWork("1").BeginTransactionAsync();
 
-                var categoryRepositopry = _unitOfWork.GetRepository<Domain.Entites.Movies.Category>();
+                var categoryRepositopry = _unitOfWork("1").GetRepository<Domain.Entites.Movies.Category>();
 
 
                 int totalRow = await categoryRepositopry.TotalRecords();
@@ -287,13 +287,13 @@ namespace Application.Service.MoviesService
 
                 }
 
-                await _unitOfWork.BulkSaveChangesAsync();
-                _unitOfWork.CommitTransaction();
+                await _unitOfWork("1").BulkSaveChangesAsync();
+                _unitOfWork("1").CommitTransaction();
                 return true;
             }
             catch (Exception ex)
             {
-                _unitOfWork.RollbackTransaction();
+                _unitOfWork("1").RollbackTransaction();
                 return false;
             }
 
@@ -305,9 +305,9 @@ namespace Application.Service.MoviesService
 
                 int batchFindSize = 300;
 
-                await _unitOfWork.BeginTransactionAsync();
+                await _unitOfWork("1").BeginTransactionAsync();
 
-                var movieRepositopry = _unitOfWork.GetRepository<Movie>();
+                var movieRepositopry = _unitOfWork("1").GetRepository<Movie>();
 
 
                 int totalRow = await movieRepositopry.TotalRecords();
@@ -408,13 +408,13 @@ namespace Application.Service.MoviesService
 
                 }
 
-                await _unitOfWork.BulkSaveChangesAsync();
-                _unitOfWork.CommitTransaction();
+                await _unitOfWork("1").BulkSaveChangesAsync();
+                _unitOfWork("1").CommitTransaction();
                 return true;
             }
             catch (Exception ex)
             {
-                _unitOfWork.RollbackTransaction();
+                _unitOfWork("1").RollbackTransaction();
                 return false;
             }
 
@@ -424,7 +424,7 @@ namespace Application.Service.MoviesService
         {
             try
             {
-                var repo = _unitOfWork.GetMovieRepository();
+                var repo = _unitOfWork("1").GetMovieRepository();
                 var res = await repo.GetTopCategoryWithMOvies();
 
                 return responseGenerator.SuccssedWithResult(res);
