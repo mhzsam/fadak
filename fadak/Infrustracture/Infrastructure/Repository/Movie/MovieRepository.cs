@@ -21,33 +21,25 @@ namespace Infrastructure.Repository.Movie
 
         public MovieRepository(ApplicationDBContext context)
         {
-
+            
             _context = context;
 
         }
 
         public Task<List<CategoryMovieModel>> GetTopCategoryWithMOvies()
         {
-           var st= (from c in _context.Categories.Where(s => s.Status == MoviesEnums.CategoryStatus.Active).OrderBy(s => s.Priorty).Select(s => new { s.Name, s.Code }).Take(6)
-             select new CategoryMovieModel()
-             {
-                 Category = c.Name,
-                 Movies = _context.Movies.Where(s => s.CategoryCode == c.Code).Where(s => s.Status == MoviesEnums.MovieStatus.Active).OrderByDescending(s => s.UpdateDate).Take(10).ToList(),
-
-             }).Where(s => s.Movies.Count > 0).ToQueryString();
-
-
-            return (
-                    from c in _context.Categories.Where(s => s.Status == MoviesEnums.CategoryStatus.Active).OrderBy(s => s.Priorty).Select(s => new { s.Name, s.Code }).Take(6)
+           
+            var ls = (
+                    from c in _context.Categories.Where(s => s.Status == MoviesEnums.CategoryStatus.Active).OrderBy(s => s.Priorty).Select(s =>new { s.Name,s.Code }).Take(6)
                     select new CategoryMovieModel()
                     {
                         Category = c.Name,
-                        Movies = _context.Movies.Where(s => s.CategoryCode == c.Code).Where(s => s.Status == MoviesEnums.MovieStatus.Active).OrderByDescending(s => s.UpdateDate).Take(10).ToList(),
+                        Movies = _context.Movies.Where(s => s.CategoryCode == c.Code).Where(s => s.Status == MoviesEnums.MovieStatus.Active).OrderByDescending(s=>s.UpdateDate).Take(10).ToList(),
 
                     }
                     ).Where(s => s.Movies.Count > 0).ToListAsync();
 
-
+            return ls;
 
         }
     }
