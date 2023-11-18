@@ -1,2 +1,2 @@
-# ZApplication
-sample of Clean Architecture And middleware auth using EF
+# 
+this is sample project => efcore6 bulk insert bulk update
